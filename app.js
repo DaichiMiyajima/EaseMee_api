@@ -43,7 +43,7 @@ router.route('/location')
             time : formatted,
             mes  : "background api"
         })
-        res.json({ message: 'Successfully Posted location' });
+        res.sendStatus(200);
     });
 
 // ルーティング登録
