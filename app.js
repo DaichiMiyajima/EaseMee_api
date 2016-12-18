@@ -3,6 +3,7 @@ var express    = require('express');
 var app        = express();
 var bodyParser = require('body-parser');
 var date = require('date-utils');
+var Promise = require('es6-promise').polyfill();
 var admin = require("firebase-admin");
 
 admin.initializeApp({
