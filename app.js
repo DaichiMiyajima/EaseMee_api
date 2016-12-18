@@ -6,7 +6,7 @@ var date = require('date-utils');
 var admin = require("firebase-admin");
 
 admin.initializeApp({
-  credential: admin.credential.cert("./service_account.json"),
+  credential: admin.credential.cert(__dirname + "/service_account.json"),
   databaseURL: "https://candyguide-phase2.firebaseio.com"
 });
 
