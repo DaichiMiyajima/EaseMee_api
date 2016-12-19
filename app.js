@@ -27,7 +27,9 @@ log4js.configure({
 });
  
 // ロガーの生成
-var logger = log4js.getLogger('EASEMEE-API:');
+var logger = log4js.getLogger('system');
+// Express の 標準ログ出力を log4js に書き換え
+app.use(log4js.connectLogger(logger, {level: 'auto'}));
 
 admin.initializeApp({
   credential: admin.credential.cert(__dirname + "/service_account.json"),
@@ -76,3 +78,5 @@ app.use('/api', router);
 //サーバ起動
 app.listen(port);
 console.log('listen on port ' + port);
+// 起動ログ
+logger.info('Server running at http://localhost:3000');
