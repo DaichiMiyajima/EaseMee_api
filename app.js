@@ -5,6 +5,29 @@ var bodyParser = require('body-parser');
 var date = require('date-utils');
 var Promise = require('es6-promise').polyfill();
 var admin = require("firebase-admin");
+var log4js = require('log4js');
+
+// ログ出力設定
+log4js.configure({
+  "appenders": [
+    {
+      "type": "file",
+      "filename": "log/system.log",
+      "maxLogSize": 20480,
+      "backups": 3,
+      "category": "system"
+    },
+    {
+        "type": "console"
+    }
+  ],
+  "levels": {
+      "system": "ALL"
+  }
+});
+ 
+// ロガーの生成
+var logger = log4js.getLogger('EASEMEE-API:');
 
 admin.initializeApp({
   credential: admin.credential.cert(__dirname + "/service_account.json"),
@@ -37,6 +60,7 @@ router.get('/', function(req, res) {
 
 router.route('/location')
     .post(function(req, res) {
+        logger.info('Receive Location Post.');
         var dt = new Date();
         var formatted = dt.toFormat("YYYY/MM/DD HH24時MI分SS秒");
         ref.child('users').child("x6fVoiVkxYZaAsQueSAevXH3tvp1").update({
