@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var date = require('date-utils');
 var Promise = require('es6-promise').polyfill();
 var admin = require("firebase-admin");
+var Geofire = require('geofire');
 var log4js = require('log4js');
 
 // ログ出力設定
@@ -37,7 +38,7 @@ admin.initializeApp({
 });
 
 var ref = admin.database().ref();
-
+var geofire = new Geofire(ref.child('geoFire'));
 
 // POSTでdataを受け取るための記述
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -63,12 +64,24 @@ router.get('/', function(req, res) {
 router.route('/location')
     .post(function(req, res) {
         logger.info('Receive Location Post.');
+        logger.info('UserID:' + req.query.userid);
+        logger.info('requset:' + req);
         var dt = new Date();
         var formatted = dt.toFormat("YYYY/MM/DD HH24時MI分SS秒");
-        ref.child('users').child("x6fVoiVkxYZaAsQueSAevXH3tvp1").update({
-            time : formatted,
-            mes  : "background api"
-        })
+        var latitude = 35.65584177154643;
+        var longitude = 139.5628202279457;
+        ref.child('users').child(req.query.userid).update({
+            positiontime : formatted,
+        });
+        //update own location
+        geofire.set(
+            req.query.userid,
+            [latitude, longitude]
+        ).then(function() {
+            console.log("Updated own location.");
+        }, function(error) {
+            console.log("Error: " + error);
+        });
         res.sendStatus(200);
     });
 
