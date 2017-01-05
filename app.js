@@ -64,15 +64,27 @@ router.get('/', function(req, res) {
 router.route('/location')
     .post(function(req, res) {
         logger.info('Receive Location Post.');
-        logger.info('UserID:' + req.body.userid);
         var dt = new Date();
         var formatted = dt.toFormat("YYYY/MM/DD HH24時MI分SS秒");
+        logger.info('TIME:' + formatted + '  UserID:' + req.body.userid);
         userid = req.body.userid;
         var latitude = Number(req.body.latitude);
         var longitude = Number(req.body.longitude);
+        
+        //update the update time to user table
         ref.child('users').child(userid).update({
             positiontime : formatted,
         });
+        
+        //set the location history
+        var postsRef = ref.child('users').child(userid).child('locationhistory');
+        var newPostRef = postsRef.push();
+        newPostRef.set({
+            positiontime : formatted,
+            latitude : latitude,
+            longitude: longitude
+        });
+        
         //update own location
         geofire.set(
             userid,
