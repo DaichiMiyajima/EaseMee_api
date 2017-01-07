@@ -65,7 +65,7 @@ router.route('/location')
     .post(function(req, res) {
         logger.info('Receive Location Post.');
         var dt = new Date();
-        var formatted = dt.toFormat("YYYY/MM/DD HH24時MI分SS秒");
+        var formatted = dt.toFormat("YYYYMMDDHH24MISS");
         logger.info('TIME:' + formatted + '  UserID:' + req.body.userid);
         userid = req.body.userid;
         var latitude = Number(req.body.latitude);
