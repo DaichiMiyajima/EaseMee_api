@@ -66,6 +66,7 @@ router.route('/location')
         logger.info('Receive Location Post.');
         var dt = new Date();
         var formatted = dt.toFormat("YYYYMMDDHH24MISS");
+        var formatted_hh = dt.toFormat("YYYYMMDDHH24");
         logger.info('TIME:' + formatted + '  UserID:' + req.body.userid);
         userid = req.body.userid;
         var latitude = Number(req.body.latitude);
@@ -77,7 +78,7 @@ router.route('/location')
         });
         
         //set the location history
-        var postsRef = ref.child('users').child(userid).child('locationhistory');
+        var postsRef = ref.child('users').child(userid).child('locationhistory').child(formatted_hh);
         var newPostRef = postsRef.push();
         newPostRef.set({
             positiontime : formatted,
